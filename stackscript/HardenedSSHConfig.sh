@@ -105,3 +105,31 @@ else
     echo "Failed to restart SSH service. Check the configuration."
     exit 1
 fi
+
+
+# Install fail2ban 
+apt-get install fail2ban -y
+
+systemctl disable --now fail2ban
+
+# Configure fail2ban to monitor the SSH service
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+touch /etc/fail2ban/jail.d/00-sshd.conf
+
+touch /etc/fail2ban/jail.d/00-sshd.conf
+
+cat << 'EOF' > /etc/fail2ban/jail.d/00-sshd.conf
+[sshd]
+enabled = true
+bantime.increment = true
+bantime = 1h
+bantime.rndtime = 30m
+maxretry = 5
+bantime.multipliers = 1 12 24 168 336 672 1008 2016 4032
+bantime.overalljails = true
+mode   = normal
+port    = ssh
+logpath = %(sshd_log)s
+backend = %(sshd_backend)s
+EOF
