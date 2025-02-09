@@ -1,31 +1,40 @@
 # HardenedSSHConfig
-> Advanced SSH Server Hardening on Debian 12
+> **Advanced SSH Server Hardening with Fail2Ban on Debian 12**  
 
-### About HardenedSSHConfig
+### **About HardenedSSHConfig**  
 
-HardenedSSHConfig is a linode stackscript.
+**HardenedSSHConfig** is a Linode StackScript designed to deploy a highly secure SSH server on a **Debian 12** instance. This script enhances SSH security with advanced configurations, restricted user access, and automated protection against brute-force attacks using **Fail2Ban**.  
 
-This StackScript allows you to deploy a secure SSH server on a Debian 12 instance by applying advanced configurations to enhance security and reduce the risk of unauthorized access.  
+### **Main Features**  
 
-### **Main Features**:  
-- **Advanced SSH Configuration**:  
-  - Custom SSH port modification  
-  - Optional password authentication disabling  
-  - Root login restriction or allowance  
-  - Security hardening (session limits, disabling unnecessary features)  
+✅ **Advanced SSH Configuration**  
+- Custom SSH port modification  
+- Optional password authentication disabling  
+- Root login restriction or allowance  
+- Security hardening:  
+  - Limiting authentication attempts  
+  - Disabling unnecessary features (X11 forwarding, Rhosts, etc.)  
+  - Restricting TCP keepalive and environment variables  
 
-- **Creation of a Limited User with Sudo Access**:  
-  - Adding a user with a predefined password  
-  - Configuring SSH keys for this user  
-  - Secure permissions for the `.ssh` directory and authorized keys  
+✅ **Creation of a Limited User with Sudo Access**  
+- Adding a restricted user with a predefined password  
+- Configuring SSH key authentication  
+- Secure permissions for the `.ssh` directory and authorized keys  
 
-- **Automated System Updates**:  
-  - Updating and upgrading packages before applying configurations  
+✅ **Automated System Updates**  
+- Updating and upgrading packages before applying configurations  
 
-- **SSH Service Restart and Verification**:  
-  - Backing up the original configuration  
-  - Applying changes and securely restarting the service  
+✅ **Fail2Ban Integration for Brute-Force Protection**  
+- Installing **Fail2Ban** and configuring it to monitor SSH access  
+- Enabling **incremental ban time** for repeated failed login attempts  
+- Adjusting security policies, including:  
+  - Custom ban durations and retry limits  
+  - Support for IPv6 and systemd logging  
+  - DNS resolution settings for better tracking  
 
-This script is ideal for any Debian 12 instance requiring secure SSH access with customizable options.
+✅ **SSH & Fail2Ban Service Management**  
+- Backing up the original SSH configuration  
+- Applying changes and securely restarting SSH and Fail2Ban  
 
-
+### **Why Use HardenedSSHConfig?**  
+This script is **ideal** for anyone deploying a Debian 12 instance that requires **secure SSH access**, **automated attack protection**, and **customizable user privileges**. It provides an all-in-one solution to enhance system security while maintaining flexibility.  
