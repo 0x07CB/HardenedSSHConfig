@@ -132,14 +132,14 @@ logpath = %(sshd_log)s
 backend = %(sshd_backend)s
 EOF
 
-# Décommenter et configurer logencoding en utf-8 dans jail.local
-sed -i 's/^#logencoding = auto/logencoding = utf-8/' /etc/fail2ban/jail.local
+# Configurer logencoding en utf-8 dans jail.local
+sed -i 's/^#\{0,1\}logencoding = .*/logencoding = utf-8/' /etc/fail2ban/jail.local
 
-# Décommenter et configurer usedns sur yes dans jail.local
-sed -i 's/^#usedns = warn/usedns = yes/' /etc/fail2ban/jail.local
+# Configurer usedns sur yes dans jail.local
+sed -i 's/^#\{0,1\}usedns = .*/usedns = yes/' /etc/fail2ban/jail.local
 
-# Décommenter et configurer backend sur systemd dans jail.local
-sed -i 's/^#backend = auto/backend = systemd/' /etc/fail2ban/jail.local
+# Configurer backend sur systemd dans jail.local
+sed -i 's/^#\{0,1\}backend = .*/backend = systemd/' /etc/fail2ban/jail.local
 
 # Décommenter et configurer allowipv6 sur yes dans fail2ban.conf
 sed -i 's/^#allowipv6 = auto/allowipv6 = yes/' /etc/fail2ban/fail2ban.conf
