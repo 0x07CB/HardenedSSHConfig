@@ -117,9 +117,7 @@ cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 
 touch /etc/fail2ban/jail.d/00-sshd.conf
 
-touch /etc/fail2ban/jail.d/00-sshd.conf
-
-cat << 'EOF' > /etc/fail2ban/jail.d/00-sshd.conf
+cat << EOF > /etc/fail2ban/jail.d/00-sshd.conf
 [sshd]
 enabled = true
 bantime.increment = true
@@ -129,7 +127,24 @@ maxretry = 5
 bantime.multipliers = 1 12 24 168 336 672 1008 2016 4032
 bantime.overalljails = true
 mode   = normal
-port    = ssh
+port    = ${SSH_PORT}
 logpath = %(sshd_log)s
 backend = %(sshd_backend)s
 EOF
+
+# Décommenter et configurer logencoding en utf-8 dans jail.local
+sed -i 's/^#logencoding = auto/logencoding = utf-8/' /etc/fail2ban/jail.local
+
+# Décommenter et configurer usedns sur yes dans jail.local
+sed -i 's/^#usedns = warn/usedns = yes/' /etc/fail2ban/jail.local
+
+# Décommenter et configurer backend sur systemd dans jail.local
+sed -i 's/^#backend = auto/backend = systemd/' /etc/fail2ban/jail.local
+
+# Décommenter et configurer allowipv6 sur yes dans fail2ban.conf
+sed -i 's/^#allowipv6 = auto/allowipv6 = yes/' /etc/fail2ban/fail2ban.conf
+
+
+systemctl enable --now fail2ban
+
+systemctl restart sshd
