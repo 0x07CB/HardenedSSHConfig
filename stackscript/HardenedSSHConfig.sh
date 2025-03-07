@@ -144,6 +144,15 @@ sudo sed -i 's/^#\{0,1\}backend = .*/backend = systemd/' /etc/fail2ban/jail.loca
 # Décommenter et configurer allowipv6 sur yes dans fail2ban.conf
 sudo sed -i 's/^#allowipv6 = auto/allowipv6 = yes/' /etc/fail2ban/fail2ban.conf
 
+# Activation de fail2ban avec les configurations mises à jour
 sudo systemctl enable --now fail2ban
 
-sudo systemctl restart sshd
+# Vérification de la configuration de fail2ban avant redémarrage
+if sudo fail2ban-client status > /dev/null 2>&1; then
+    echo "La configuration de fail2ban est correcte. Redémarrage du service fail2ban..."
+    sudo systemctl restart fail2ban
+    echo "fail2ban redémarré avec succès."
+else
+    echo "Erreur : la configuration de fail2ban semble incorrecte. Consultez les logs."
+    exit 1
+fi
