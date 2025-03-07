@@ -24,13 +24,13 @@ trap 'echo "Erreur : Une erreur est survenue à la ligne ${LINENO}. Veuillez vé
 sudo apt-get update -y && sudo apt-get upgrade -y
 
 # Sauvegarde de la configuration SSHD originale
-if [ -f /etc/ssh/sshd_config ]; then
-    sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.default
-    echo "Sauvegarde de sshd_config créée à /etc/ssh/sshd_config.default"
-else
-    echo "Erreur : fichier de configuration SSH introuvable. Arrêt du script."
-    exit 1
-fi
+#if [ -f /etc/ssh/sshd_config ]; then
+#    sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.default
+#    echo "Sauvegarde de sshd_config créée à /etc/ssh/sshd_config.default"
+#else
+#    echo "Erreur : fichier de configuration SSH introuvable. Arrêt du script."
+#    exit 1
+#fi
 
 sudo sed -i '1iProtocol 2' /etc/ssh/sshd_config
 
