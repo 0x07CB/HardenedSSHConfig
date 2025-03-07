@@ -35,6 +35,8 @@ sed -i "s/^#Port .*/Port ${SSH_PORT}/" /etc/ssh/sshd_config
 
 sed -i -E 's/^#?(ChallengeResponseAuthentication) .*/\1 no/' /etc/ssh/sshd_config
 
+sed -i -E 's/^#?(KbdInteractiveAuthentication) .*/\1 no/' /etc/ssh/sshd_config
+
 sed -i -E 's/^#?(PubkeyAuthentication) .*/\1 yes/' /etc/ssh/sshd_config
 
 sed -i -E "s/^#?(PermitRootLogin) .*/\1 ${PERMIT_ROOT}/" /etc/ssh/sshd_config
@@ -99,7 +101,7 @@ sudo -u ${LIMITED_USER_NAME} chmod 600 /home/${LIMITED_USER_NAME}/.ssh/authorize
 
 
 # Restart the SSH service to apply the changes
-if systemctl restart sshd; then
+if systemctl restart ssh; then
     echo "SSH service restarted successfully."
 else
     echo "Failed to restart SSH service. Check the configuration."
