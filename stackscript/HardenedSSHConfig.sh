@@ -21,7 +21,7 @@ set -e
 trap 'echo "Erreur : Une erreur est survenue à la ligne ${LINENO}. Veuillez vérifier la dernière commande exécutée." >&2' ERR
 
 # Mise à jour et mise à niveau des paquets système
-sudo apt-get update -y && sudo apt-get upgrade -y
+sudo apt-get update -y 
 
 # Sauvegarde de la configuration SSHD originale
 #if [ -f /etc/ssh/sshd_config ]; then
