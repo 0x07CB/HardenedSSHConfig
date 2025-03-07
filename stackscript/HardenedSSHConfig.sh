@@ -93,13 +93,11 @@ echo "${LIMITED_USER_NAME}:${LIMITED_USER_PASSWORD}" | sudo chpasswd
 # Ajout du nouvel utilisateur au groupe sudo
 sudo usermod -aG sudo "${LIMITED_USER_NAME}"
 
-# Dans le répertoire personnel du nouvel utilisateur, création du dossier .ssh et du fichier authorized_keys avec les permissions appropriées
-sudo mkdir -p /home/"${LIMITED_USER_NAME}"/.ssh
-sudo touch /home/"${LIMITED_USER_NAME}"/.ssh/authorized_keys
-sudo sh -c 'cat /root/.ssh/authorized_keys >> /home/'"${LIMITED_USER_NAME}"'/.ssh/authorized_keys'
-sudo chown -R "${LIMITED_USER_NAME}":"${LIMITED_USER_NAME}" /home/"${LIMITED_USER_NAME}"/.ssh
-sudo -u "${LIMITED_USER_NAME}" chmod 700 /home/"${LIMITED_USER_NAME}"/.ssh
-sudo -u "${LIMITED_USER_NAME}" chmod 600 /home/"${LIMITED_USER_NAME}"/.ssh/authorized_keys
+# Dans le répertoire personnel du nouvel utilisateur, création du dossier .ssh avec les permissions appropriées, et copie du fichier authorized_keys
+sudo install -o "${LIMITED_USER_NAME}" -g "${LIMITED_USER_NAME}" -d -m 700 /home/"${LIMITED_USER_NAME}"/.ssh
+sudo cp /root/.ssh/authorized_keys /home/"${LIMITED_USER_NAME}"/.ssh/authorized_keys
+sudo chown "${LIMITED_USER_NAME}":"${LIMITED_USER_NAME}" /home/"${LIMITED_USER_NAME}"/.ssh/authorized_keys
+sudo chmod 600 /home/"${LIMITED_USER_NAME}"/.ssh/authorized_keys
 
 # Redémarrage du service SSH pour appliquer les modifications
 if sudo systemctl restart ssh; then
