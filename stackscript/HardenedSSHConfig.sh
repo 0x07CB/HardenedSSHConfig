@@ -32,59 +32,43 @@ else
     exit 1
 fi
 
-sudo sed -i '1iProtocol 2' /etc/ssh/sshd_config
+# Créer un fichier de configuration personnalisé
+sudo mkdir -p /etc/ssh/sshd_config.d
+sudo tee /etc/ssh/sshd_config.d/custom.conf > /dev/null << EOF
+# Configuration personnalisée
+Protocol 2
+Port ${SSH_PORT}
+ChallengeResponseAuthentication no
+KbdInteractiveAuthentication no
+PubkeyAuthentication yes
+PermitRootLogin ${PERMIT_ROOT}
+PasswordAuthentication ${ALLOW_PASSWORD}
+Compression no
+GatewayPorts no
+AllowTcpForwarding yes
+AllowAgentForwarding yes
+UsePAM yes
+X11Forwarding no
+IgnoreRhosts yes
+HostbasedAuthentication no
+MaxSessions 6
+MaxAuthTries 3
+AuthorizedKeysFile .ssh/authorized_keys
+LogLevel VERBOSE
+PrintLastLog yes
+TCPKeepAlive no
+PermitUserEnvironment no
+ClientAliveInterval 300
+ClientAliveCountMax 0
+UseDNS no
+PidFile /var/run/sshd.pid
+MaxStartups 10:30:100
+EOF
 
-sudo sed -i "s/^#Port .*/Port ${SSH_PORT}/" /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(ChallengeResponseAuthentication) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(KbdInteractiveAuthentication) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(PubkeyAuthentication) .*/\1 yes/' /etc/ssh/sshd_config
-
-sudo sed -i -E "s/^#?(PermitRootLogin) .*/\1 ${PERMIT_ROOT}/" /etc/ssh/sshd_config
-
-sudo sed -i -E "s/^#?(PasswordAuthentication) .*/\1 ${ALLOW_PASSWORD}/" /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(Compression) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(GatewayPorts) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(AllowTcpForwarding) .*/\1 yes/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(AllowAgentForwarding) .*/\1 yes/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(UsePAM) .*/\1 yes/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(X11Forwarding) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(IgnoreRhosts) .*/\1 yes/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(HostbasedAuthentication) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(MaxSessions) .*/\1 6/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(MaxAuthTries) .*/\1 3/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#(AuthorizedKeysFile[[:space:]]+)/\1/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(LogLevel) .*/\1 VERBOSE/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(PrintLastLog) .*/\1 yes/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(TCPKeepAlive) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(PermitUserEnvironment) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(ClientAliveInterval) .*/\1 300/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(ClientAliveCountMax) .*/\1 0/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(UseDNS) .*/\1 no/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(PidFile) .*/\1 \/var\/run\/sshd.pid/' /etc/ssh/sshd_config
-
-sudo sed -i -E 's/^#?(MaxStartups) .*/\1 10:30:100/' /etc/ssh/sshd_config
+# Inclure le fichier personnalisé dans le fichier principal sshd_config
+if ! grep -q "^Include /etc/ssh/sshd_config.d/*.conf" /etc/ssh/sshd_config; then
+    echo "Include /etc/ssh/sshd_config.d/*.conf" | sudo tee -a /etc/ssh/sshd_config
+fi
 
 # Création d'un nouvel utilisateur avec le nom et le mot de passe spécifiés
 sudo useradd -m -s /bin/bash "${LIMITED_USER_NAME}"
