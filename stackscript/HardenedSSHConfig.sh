@@ -18,6 +18,7 @@
 
 # Arrêter le script immédiatement en cas d'erreur
 set -e
+trap 'echo "Erreur : Une erreur est survenue à la ligne ${LINENO}. Veuillez vérifier la dernière commande exécutée." >&2' ERR
 
 # Mise à jour et mise à niveau des paquets système
 sudo apt-get update -y && sudo apt-get upgrade -y
